@@ -1,3 +1,4 @@
+using FrameworkDesign;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,54 +11,37 @@ namespace CounterApp
     {
         private void Start()
         {
-            OnCountedChangedEvent.Register(OnCountChanged);
-
+            
+            CounterModel.Count.OnValueChanged += OnCountChanged;
             //主动调用一次
-            OnCountChanged();
+            OnCountChanged(CounterModel.Count.Value);
             transform.Find("BtnAdd").GetComponent<Button>().onClick.AddListener(() =>
             {
                 //交互逻辑
-                CounterModel.Count++;
+                CounterModel.Count.Value++;
             });
             transform.Find("BtnSub").GetComponent<Button>().onClick.AddListener(() =>
             {
-                CounterModel.Count--;
-                
+                CounterModel.Count.Value--;
+
             });
         }
 
-        private void OnCountChanged()
+        private void OnCountChanged(int newCount)
         {
-            transform.Find("CountText").GetComponent<Text>().text = CounterModel.Count.ToString();
+            transform.Find("CountText").GetComponent<Text>().text = newCount.ToString();
         }
      
         private void OnDestroy()
         {
-            OnCountedChangedEvent.Unregister(OnCountChanged);
+            CounterModel.Count.OnValueChanged -= OnCountChanged;
         }
     }
     public static class CounterModel
     {
-        private static int mCount = 0;
-        
-        public static int Count
-        {
-            get
-            {
-                return mCount;
-            }
-            set
-            {
-                if (value != mCount)
-                {
-                    mCount = value;
-                    OnCountedChangedEvent.Trigger();
-                }
-            }
-        }
-    }
-    public class OnCountedChangedEvent : Event<OnCountedChangedEvent>
-    {
-
+        public static BindableProperty<int> Count = new BindableProperty<int>() 
+        { 
+            Value = 0 
+        };
     }
 }
