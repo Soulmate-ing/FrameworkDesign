@@ -18,12 +18,11 @@ namespace CounterApp
             transform.Find("BtnAdd").GetComponent<Button>().onClick.AddListener(() =>
             {
                 //½»»¥Âß¼­
-                CounterModel.Count.Value++;
+                new AddCountCommand().Execute();
             });
             transform.Find("BtnSub").GetComponent<Button>().onClick.AddListener(() =>
             {
-                CounterModel.Count.Value--;
-
+                new SubCountCommand().Execute();
             });
         }
 

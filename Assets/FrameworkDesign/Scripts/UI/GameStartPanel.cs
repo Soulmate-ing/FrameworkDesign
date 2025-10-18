@@ -14,7 +14,7 @@ namespace FrameworkDesign.Example
                 .onClick.AddListener(() =>
                 {
                     gameObject.SetActive(false);
-                    GameStartEvent.Trigger();
+                    new StartGameCommand().Execute();
                 });
         }
     }
